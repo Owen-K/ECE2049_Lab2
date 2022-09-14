@@ -1,5 +1,5 @@
 #include <msp430.h> 
-
+#include "peripherals.h"
 
 /**
  * main.c
