@@ -1,5 +1,6 @@
 #include <msp430.h> 
 #include "peripherals.h"
+#include "notes.h"
 
 /**
  * main.c
@@ -9,7 +10,7 @@
 void swDelay(char numLoops);
 
 // Declare globals here
-enum GameState{Welcome, CheckStart, CountDown, MoveAliens, GenAliens, DrawAliens, CheckEnd, CheckKeypad, GameOver, NewLevel};
+enum GameState{Welcome, CheckStart, CountDown, PlayNotes};
 
 
 
@@ -27,6 +28,7 @@ void main(void)
 
 	Graphics_clearDisplay(&g_sContext); // Clear the display
 
+	int i, j;
 	while(1)
 	{
         switch(state)
@@ -68,8 +70,17 @@ void main(void)
                 Graphics_flushBuffer(&g_sContext);
                 setLeds(0xF);
 
-                state = Welcome;
+                state = PlayNotes;
 
+                break;
+            case PlayNotes:
+                BuzzerOn();
+                for(i = 0; i < 12; i++){
+                    playNote(notes[i].pitch);
+                    swDelay(2);
+                }
+                BuzzerOff();
+                state = Welcome;
                 break;
         }
 	}
