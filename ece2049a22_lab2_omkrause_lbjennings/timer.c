@@ -14,7 +14,7 @@ void setupTimerA2(){
     TA2CCTL0 = CCIE;
 }
 
-#pragma vector = TIMER2_A0_VECTOR
+/*#pragma vector = TIMER2_A0_VECTOR
 _interupt void Timer_A2_ISR(void) {
-
-}
+    timer++;
+}*/

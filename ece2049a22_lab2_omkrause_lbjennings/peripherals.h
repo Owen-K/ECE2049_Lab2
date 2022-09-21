@@ -70,8 +70,10 @@ void initLeds(void);
 void setLeds(unsigned char state);
 
 void configDisplay(void);
+
 void BuzzerOn(void);
 void BuzzerOff(void);
+void playNote(unsigned int frequency);
 
 void configKeypad(void);
 unsigned char getKey(void);
