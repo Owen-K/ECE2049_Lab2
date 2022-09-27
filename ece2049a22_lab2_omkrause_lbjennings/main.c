@@ -9,15 +9,16 @@
 
 // Function Prototypes
 void swDelay(char numLoops);
+void setupTimerA2();
 
 // Declare globals here
 enum GameState{Welcome, CheckStart, CountDown, PlayNotes};
 
 
-
 void main(void)
 {
 	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
+	_BIS_SR(GIE);
 	
 	enum GameState state;
 	state = Welcome;
@@ -33,6 +34,7 @@ void main(void)
 	unsigned long int startOfDelay = 0;
 	setupTimerA2();
 	unsigned long int start_time;
+	unsigned char countdown;
 
 	//temporary
 	unsigned char song[] = {7, 5, 3, 7, 5, 3, 8, 7, 5, 8, 7, 5};
@@ -54,36 +56,49 @@ void main(void)
             case CheckStart:
                 if(getKey() == '*'){
                     //loopCounter = 0;
+                    countdown = 0;
+                    start_time = 0;
                     state = CountDown;
-                    start_time = timer_cnt;
                 }
                 break;
 
             case CountDown:
-                if (timer_cnt == start_time) {
-                    Graphics_clearDisplay(&g_sContext);
-                    Graphics_drawStringCentered(&g_sContext, "3", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                    Graphics_flushBuffer(&g_sContext);
-                    setLeds(0x8);
-                } else if (timer_cnt == (start_time + 1000/5)) {
-                    Graphics_clearDisplay(&g_sContext);
-                    Graphics_drawStringCentered(&g_sContext, "2", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                    Graphics_flushBuffer(&g_sContext);
-                    setLeds(0xC);
-                } else if (timer_cnt == (start_time + 2000/5)) {
-                    Graphics_clearDisplay(&g_sContext);
-                    Graphics_drawStringCentered(&g_sContext, "1", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                    Graphics_flushBuffer(&g_sContext);
-                    setLeds(0xE);
-                } else if (timer_cnt == (start_time + 3000/5)) {
-                    Graphics_clearDisplay(&g_sContext);
-                    Graphics_drawStringCentered(&g_sContext, "GO", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                    Graphics_flushBuffer(&g_sContext);
-                    setLeds(0xF);
-                } else if (timer_cnt == (start_time + 4000/5))
-                    state = PlayNotes;
+                if (timer_cnt > (start_time + 1000/5)) {
+                    switch(countdown) {
+                        case 0:
+                            Graphics_clearDisplay(&g_sContext);
+                            Graphics_drawStringCentered(&g_sContext, "3", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                            Graphics_flushBuffer(&g_sContext);
+                            setLeds(0x8);
+                            break;
+                        case 1:
+                            Graphics_clearDisplay(&g_sContext);
+                            Graphics_drawStringCentered(&g_sContext, "2", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                            Graphics_flushBuffer(&g_sContext);
+                            setLeds(0xC);
+                            break;
+                        case 2:
+                            Graphics_clearDisplay(&g_sContext);
+                            Graphics_drawStringCentered(&g_sContext, "1", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                            Graphics_flushBuffer(&g_sContext);
+                            setLeds(0xE);
+                            break;
+                        case 3:
+                            Graphics_clearDisplay(&g_sContext);
+                            Graphics_drawStringCentered(&g_sContext, "GO", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                            Graphics_flushBuffer(&g_sContext);
+                            setLeds(0xF);
+                            break;
+                        case 4:
+                            state = PlayNotes;
+                            break;
+                    }
 
+                    countdown++;
+                    start_time = timer_cnt;
+                }
                 break;
+
             case PlayNotes:
                 for(i = 0; i < sizeof(song); i++){
                     playNote(notes[song[i]].pitch);
