@@ -29,12 +29,15 @@ void main(void)
 
 	Graphics_clearDisplay(&g_sContext); // Clear the display
 
-	int i, j;
 	int countDownDelay = 100;
 	unsigned long int startOfDelay = 0;
 	//setupTimerA2();
 	bool firstGo = true;
 
+	//temporary
+	unsigned char song[] = {7, 5, 3, 7, 5, 3, 8, 7, 5, 8, 7, 5};
+
+	unsigned int i, j;
 	while(1)
 	{
         switch(state)
@@ -82,10 +85,10 @@ void main(void)
 
                 break;
             case PlayNotes:
-                BuzzerOn();
-                for(i = 0; i < 12; i++){
-                    playNote(notes[i].pitch);
-                    swDelay(2);
+                for(i = 0; i < sizeof(song); i++){
+                    playNote(notes[song[i]].pitch);
+                    setLeds(notes[song[i]].led);
+                    swDelay(1);
                 }
                 BuzzerOff();
                 state = Welcome;

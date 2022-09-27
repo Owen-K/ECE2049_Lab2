@@ -10,6 +10,8 @@
 
 #include <msp430.h>
 
+unsigned int timer = 0;
+
 void setupTimerA2();
 unsigned long int TimerCount;
 
