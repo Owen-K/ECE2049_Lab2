@@ -94,7 +94,7 @@ void BuzzerOn(void)
 
 void playNote(int frequency)
 {
-    TB0CCR0 = (32768 / frequency)/2 +1;
+    TB0CCR0 = 32768 / frequency + 1;
 }
 
 /*

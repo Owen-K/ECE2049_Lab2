@@ -1,6 +1,7 @@
 #include <msp430.h> 
 #include "peripherals.h"
 #include "notes.h"
+#include "timer.h"
 
 /**
  * main.c
@@ -29,6 +30,11 @@ void main(void)
 	Graphics_clearDisplay(&g_sContext); // Clear the display
 
 	int i, j;
+	int countDownDelay = 100;
+	unsigned long int startOfDelay = 0;
+	//setupTimerA2();
+	bool firstGo = true;
+
 	while(1)
 	{
         switch(state)
@@ -50,11 +56,13 @@ void main(void)
                 break;
 
             case CountDown:
-                Graphics_clearDisplay(&g_sContext);
-                Graphics_drawStringCentered(&g_sContext, "3", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                Graphics_flushBuffer(&g_sContext);
-                setLeds(0x8);
-                swDelay(1);
+                if(firstGo == true){
+                    //startOfDelay = TimerCount;
+                }
+
+
+
+                /*swDelay(1);
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "2", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
                 Graphics_flushBuffer(&g_sContext);
@@ -68,7 +76,7 @@ void main(void)
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "GO", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
                 Graphics_flushBuffer(&g_sContext);
-                setLeds(0xF);
+                setLeds(0xF);*/
 
                 state = PlayNotes;
 

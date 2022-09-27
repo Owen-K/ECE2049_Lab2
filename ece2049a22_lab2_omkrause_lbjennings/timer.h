@@ -11,6 +11,7 @@
 #include <msp430.h>
 
 void setupTimerA2();
+unsigned long int TimerCount;
 
 
 
