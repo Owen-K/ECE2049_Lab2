@@ -92,13 +92,6 @@ void BuzzerOn(void)
     TB0CCR5   = TB0CCR0/2;                  // Configure a 50% duty cycle
 }
 
-<<<<<<< HEAD
-void playNote(int frequency)
-{
-    TB0CCR0 = 32768 / frequency + 1;
-}
-=======
->>>>>>> 253aebeef1e9982395dde9a0ad7a0234d108317a
 
 /*
  * Disable the buzzer on P7.5
