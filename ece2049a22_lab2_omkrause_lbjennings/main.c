@@ -31,8 +31,8 @@ void main(void)
 
 	int countDownDelay = 100;
 	unsigned long int startOfDelay = 0;
-	//setupTimerA2();
-	bool firstGo = true;
+	setupTimerA2();
+	unsigned long int start_time;
 
 	//temporary
 	unsigned char song[] = {7, 5, 3, 7, 5, 3, 8, 7, 5, 8, 7, 5};
@@ -55,33 +55,33 @@ void main(void)
                 if(getKey() == '*'){
                     //loopCounter = 0;
                     state = CountDown;
+                    start_time = timer_cnt;
                 }
                 break;
 
             case CountDown:
-                if(firstGo == true){
-                    //startOfDelay = TimerCount;
-                }
-
-
-
-                /*swDelay(1);
-                Graphics_clearDisplay(&g_sContext);
-                Graphics_drawStringCentered(&g_sContext, "2", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                Graphics_flushBuffer(&g_sContext);
-                setLeds(0xC);
-                swDelay(1);
-                Graphics_clearDisplay(&g_sContext);
-                Graphics_drawStringCentered(&g_sContext, "1", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                Graphics_flushBuffer(&g_sContext);
-                setLeds(0xE);
-                swDelay(1);
-                Graphics_clearDisplay(&g_sContext);
-                Graphics_drawStringCentered(&g_sContext, "GO", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
-                Graphics_flushBuffer(&g_sContext);
-                setLeds(0xF);*/
-
-                state = PlayNotes;
+                if (timer_cnt == start_time) {
+                    Graphics_clearDisplay(&g_sContext);
+                    Graphics_drawStringCentered(&g_sContext, "3", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                    Graphics_flushBuffer(&g_sContext);
+                    setLeds(0x8);
+                } else if (timer_cnt == (start_time + 1000/5)) {
+                    Graphics_clearDisplay(&g_sContext);
+                    Graphics_drawStringCentered(&g_sContext, "2", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                    Graphics_flushBuffer(&g_sContext);
+                    setLeds(0xC);
+                } else if (timer_cnt == (start_time + 2000/5)) {
+                    Graphics_clearDisplay(&g_sContext);
+                    Graphics_drawStringCentered(&g_sContext, "1", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                    Graphics_flushBuffer(&g_sContext);
+                    setLeds(0xE);
+                } else if (timer_cnt == (start_time + 3000/5)) {
+                    Graphics_clearDisplay(&g_sContext);
+                    Graphics_drawStringCentered(&g_sContext, "GO", AUTO_STRING_LENGTH, 48, 48, TRANSPARENT_TEXT);
+                    Graphics_flushBuffer(&g_sContext);
+                    setLeds(0xF);
+                } else if (timer_cnt == (start_time + 4000/5))
+                    state = PlayNotes;
 
                 break;
             case PlayNotes:
