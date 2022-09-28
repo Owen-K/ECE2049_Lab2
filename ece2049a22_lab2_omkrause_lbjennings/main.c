@@ -12,7 +12,7 @@ void swDelay(char numLoops);
 void setupTimerA2();
 
 // Declare globals here
-enum GameState{Welcome, CheckStart, CountDown, PlayNotes, WinGame, LoseGame};
+enum GameState{Welcome, CheckStart, CountDown, PlayNotes, WinGame, LoseGame, EndGame};
 static const int COUNTDOWN_DELAY = 1000;
 
 struct Song{
@@ -51,6 +51,14 @@ void main(void)
 
 	while(1)
 	{
+	    if(getKey() == '#') {
+	        BuzzerOff();
+	        setLeds(0x0);
+	        CurrSongIndex = 0;
+            numMissed = 0;
+            hitNote = false;
+            state = Welcome;
+	    }
         switch(state)
         {
             case Welcome://welcome screen
@@ -67,6 +75,7 @@ void main(void)
                     //loopCounter = 0;
                     countdown = 0;
                     start_time = 0;
+                    CurrSongIndex = 0;
                     state = CountDown;
                 }
                 leds = getButtons();
@@ -103,7 +112,6 @@ void main(void)
                         case 4:
                             state = PlayNotes;
                             start_time = timer_cnt;
-                            BuzzerOn();
                             playNote(notes[song1[CurrSongIndex].NoteIndex].pitch);
                             setLeds(notes[song1[CurrSongIndex].NoteIndex].led);
                             break;
@@ -150,6 +158,7 @@ void main(void)
                 Graphics_clearDisplay(&g_sContext);
                 Graphics_drawStringCentered(&g_sContext, "YOU ARE WINNER", AUTO_STRING_LENGTH, 48, 44, TRANSPARENT_TEXT);
                 Graphics_flushBuffer(&g_sContext);
+                state = EndGame;
                 break;
 
             case LoseGame:
@@ -157,6 +166,10 @@ void main(void)
                 Graphics_drawStringCentered(&g_sContext, "YOU LOSE", AUTO_STRING_LENGTH, 48, 44, TRANSPARENT_TEXT);
                 Graphics_drawStringCentered(&g_sContext, "YOU SUCK", AUTO_STRING_LENGTH, 48, 52, TRANSPARENT_TEXT);
                 Graphics_flushBuffer(&g_sContext);
+                state = EndGame;
+                break;
+
+            case EndGame:
                 break;
 
         }
