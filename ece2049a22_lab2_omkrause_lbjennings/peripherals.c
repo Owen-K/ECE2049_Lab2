@@ -241,13 +241,13 @@ unsigned char getButtons(void)
     unsigned char ret_val = 0;
 
     if ((P7IN & BIT0) == 0)
-        ret_val |= BIT3;
+        ret_val |= BIT3; //S1, leftmost
     if ((P3IN & BIT6) == 0)
-        ret_val |= BIT2;
+        ret_val |= BIT2; //S2, mid-left
     if ((P2IN & BIT2) == 0)
-        ret_val |= BIT1;
+        ret_val |= BIT1; //S3, mid-right
     if ((P7IN & BIT4) == 0)
-        ret_val |= BIT0;
+        ret_val |= BIT0; //S4, rightmost
 
     return(ret_val);
 }
