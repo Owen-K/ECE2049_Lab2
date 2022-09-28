@@ -12,7 +12,7 @@ void swDelay(char numLoops);
 void setupTimerA2();
 
 // Declare globals here
-enum GameState{Welcome, CheckStart, CountDown, PlayNotes};
+enum GameState{Welcome, CheckStart, CountDown, PlayNotes, WinGame, LoseGame};
 static const int COUNTDOWN_DELAY = 1000;
 
 struct Song{
@@ -41,6 +41,8 @@ void main(void)
 	unsigned char countdown;
 	unsigned int CurrSongIndex = 0;
 	unsigned char leds = 0;
+	int numMissed = 0;
+	bool hitNote = false;
 
 	//temporary
 	struct Song song1[] = {{7, 100}, {5, 50}, {3,200}, {7,100}, {5, 20}, {3,60},
@@ -120,16 +122,43 @@ void main(void)
                         BuzzerOff();
                         setLeds(0x0);
                         CurrSongIndex = 0;
-                        state = Welcome;
+                        numMissed = 0;
+                        hitNote = false;
+                        state = WinGame;
+                    }else if(numMissed > 2){
+                        BuzzerOff();
+                        setLeds(0x0);
+                        CurrSongIndex = 0;
+                        numMissed = 0;
+                        hitNote = false;
+                        state = LoseGame;
                     }else{
+                        if(hitNote == false){
+                            numMissed++;
+                        }
                         playNote(notes[song1[CurrSongIndex].NoteIndex].pitch);
                         setLeds(notes[song1[CurrSongIndex].NoteIndex].led);
                     }
                 }
-
-
+                if(getButtons() == notes[song1[CurrSongIndex].NoteIndex].led){
+                    hitNote = true;
+                }
 
                 break;
+
+            case WinGame:
+                Graphics_clearDisplay(&g_sContext);
+                Graphics_drawStringCentered(&g_sContext, "YOU ARE WINNER", AUTO_STRING_LENGTH, 48, 44, TRANSPARENT_TEXT);
+                Graphics_flushBuffer(&g_sContext);
+                break;
+
+            case LoseGame:
+                Graphics_clearDisplay(&g_sContext);
+                Graphics_drawStringCentered(&g_sContext, "YOU LOSE", AUTO_STRING_LENGTH, 48, 44, TRANSPARENT_TEXT);
+                Graphics_drawStringCentered(&g_sContext, "YOU SUCK", AUTO_STRING_LENGTH, 48, 52, TRANSPARENT_TEXT);
+                Graphics_flushBuffer(&g_sContext);
+                break;
+
         }
 	}
 
