@@ -236,18 +236,18 @@ void configButtons(void)
 }
 
 
-unsigned char getButttons(void)
+unsigned char getButtons(void)
 {
     unsigned char ret_val = 0;
 
-    if (P7IN & BIT0 == 0)
-        ret_val |= BIT0;
-    if (P3IN & BIT6 == 0)
-        ret_val |= BIT1;
-    if (P2IN & BIT2 == 0)
-        ret_val |= BIT2;
-    if (P7IN & BIT4 == 0)
+    if ((P7IN & BIT0) == 0)
         ret_val |= BIT3;
+    if ((P3IN & BIT6) == 0)
+        ret_val |= BIT2;
+    if ((P2IN & BIT2) == 0)
+        ret_val |= BIT1;
+    if ((P7IN & BIT4) == 0)
+        ret_val |= BIT0;
 
     return(ret_val);
 }

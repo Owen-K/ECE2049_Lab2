@@ -78,7 +78,8 @@ void playNote(unsigned int frequency);
 void configKeypad(void);
 unsigned char getKey(void);
 
-void configButtons(void);
 unsigned char getButtons(void);
+void configButtons(void);
+
 
 #endif /* PERIPHERALS_H_ */

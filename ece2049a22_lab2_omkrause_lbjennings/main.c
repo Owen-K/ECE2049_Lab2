@@ -13,6 +13,7 @@ void setupTimerA2();
 
 // Declare globals here
 enum GameState{Welcome, CheckStart, CountDown, PlayNotes};
+static const int COUNTDOWN_DELAY = 1000;
 
 struct Song{
     unsigned int NoteIndex;
@@ -34,14 +35,15 @@ void main(void)
 
 	Graphics_clearDisplay(&g_sContext); // Clear the display
 
-	int countDownDelay = 1000;
+
 	setupTimerA2();
 	unsigned long int start_time;
 	unsigned char countdown;
 	unsigned int CurrSongIndex = 0;
+	unsigned char leds = 0;
 
 	//temporary
-	struct Song song1[] = {{7, 100}, {5, 50}, {3,200}, {7,1000}, {5, 20}, {3,60},
+	struct Song song1[] = {{7, 100}, {5, 50}, {3,200}, {7,100}, {5, 20}, {3,60},
 	                       {8,400}, {7,150}, {5,99}, {8,50}, {7,500}, {5,10}, {32000,0}};
 
 
@@ -65,10 +67,12 @@ void main(void)
                     start_time = 0;
                     state = CountDown;
                 }
+                leds = getButtons();
+                setLeds(leds);
                 break;
 
             case CountDown:
-                if (timer_cnt > (start_time + countDownDelay/5)) {
+                if (timer_cnt > (start_time + COUNTDOWN_DELAY/5)) {
                     switch(countdown) {
                         case 0:
                             Graphics_clearDisplay(&g_sContext);
@@ -122,6 +126,8 @@ void main(void)
                         setLeds(notes[song1[CurrSongIndex].NoteIndex].led);
                     }
                 }
+
+
 
                 break;
         }
