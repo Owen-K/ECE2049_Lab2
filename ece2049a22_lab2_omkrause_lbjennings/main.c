@@ -14,6 +14,10 @@ void setupTimerA2();
 // Declare globals here
 enum GameState{Welcome, CheckStart, CountDown, PlayNotes};
 
+struct Song{
+    unsigned int NoteIndex;
+    unsigned int NoteDuration;
+};
 
 void main(void)
 {
@@ -30,16 +34,17 @@ void main(void)
 
 	Graphics_clearDisplay(&g_sContext); // Clear the display
 
-	int countDownDelay = 100;
-	unsigned long int startOfDelay = 0;
+	int countDownDelay = 1000;
 	setupTimerA2();
 	unsigned long int start_time;
 	unsigned char countdown;
+	unsigned int CurrSongIndex = 0;
 
 	//temporary
-	unsigned char song[] = {7, 5, 3, 7, 5, 3, 8, 7, 5, 8, 7, 5};
+	struct Song song1[] = {{7, 100}, {5, 50}, {3,200}, {7,1000}, {5, 20}, {3,60},
+	                       {8,400}, {7,150}, {5,99}, {8,50}, {7,500}, {5,10}, {32000,0}};
 
-	unsigned int i, j;
+
 	while(1)
 	{
         switch(state)
@@ -63,7 +68,7 @@ void main(void)
                 break;
 
             case CountDown:
-                if (timer_cnt > (start_time + 1000/5)) {
+                if (timer_cnt > (start_time + countDownDelay/5)) {
                     switch(countdown) {
                         case 0:
                             Graphics_clearDisplay(&g_sContext);
@@ -91,6 +96,10 @@ void main(void)
                             break;
                         case 4:
                             state = PlayNotes;
+                            start_time = timer_cnt;
+                            BuzzerOn();
+                            playNote(notes[song1[CurrSongIndex].NoteIndex].pitch);
+                            setLeds(notes[song1[CurrSongIndex].NoteIndex].led);
                             break;
                     }
 
@@ -100,13 +109,20 @@ void main(void)
                 break;
 
             case PlayNotes:
-                for(i = 0; i < sizeof(song); i++){
-                    playNote(notes[song[i]].pitch);
-                    setLeds(notes[song[i]].led);
-                    swDelay(1);
+                if(timer_cnt > (start_time + song1[CurrSongIndex].NoteDuration)){
+                    start_time = timer_cnt;
+                    CurrSongIndex++;
+                    if(song1[CurrSongIndex].NoteIndex == 32000){
+                        BuzzerOff();
+                        setLeds(0x0);
+                        CurrSongIndex = 0;
+                        state = Welcome;
+                    }else{
+                        playNote(notes[song1[CurrSongIndex].NoteIndex].pitch);
+                        setLeds(notes[song1[CurrSongIndex].NoteIndex].led);
+                    }
                 }
-                BuzzerOff();
-                state = Welcome;
+
                 break;
         }
 	}
